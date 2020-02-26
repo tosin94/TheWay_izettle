@@ -1,0 +1,167 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <style type="text/css">
+    .buttons{
+      margin-right: 15px;
+    }
+    .bg{
+      background-color: red;
+      border: none;
+    }
+    .bg:hover{
+      background-color: #C54125;
+    }
+    .center {
+      text-align: center;
+    }
+    td{
+      text-align: left;
+      max-width: auto;
+      white-space: pre;
+    }
+
+  </style>
+  </head>
+  <body>
+
+    <header><h2 class="center">Sunday Lunch</h2></header>
+  <div id="demo"></div>
+
+  <div class="container-fluid">
+    <div>
+      <table class="table table-striped">
+        <thead class="center">
+          <th>Order Number</th>
+          <th>Name</th>
+          <th>Order</th>
+          <th>Action</th>
+        </thead>
+        <tbody id="table-body">
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <script>
+      //startDate uses JSON date
+        var d = new Date();
+        var n = d.toJSON();
+        console.log(n);
+
+      const settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://purchase.izettle.com/purchases/v2?limit=50&ascending=true&startDate=2020-02-24T14:24:06.272Z", //50 most recent orders
+        "method": "GET",
+        "headers": {
+            "Authorization": "Bearer eyJraWQiOiIxNTgyNjE3NDA4NjEwIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJpWmV0dGxlIiwiaWF0IjoxNTgyNjc3ODc1LCJhdWQiOiJBUEkiLCJleHAiOjE1ODI2ODUwNzUsInN1YiI6IjQyNDM2M2RlLTM2YzAtMTFlYS1iM2RiLWIzMDA3Y2M0NzRlMyIsImNsaWVudF9pZCI6IjYyMDM2MWNlLTgzM2MtNGUwMy1iN2MwLWQ5MDJmOTFkODI0YiIsInNjb3BlIjpbIlJFQUQ6T05MSU5FUEFZTUVOVCIsIldSSVRFOlBBWU1FTlQiLCJSRUFEOlBST0RVQ1QiLCJSRUFEOlBVUkNIQVNFIiwiUkVBRDpDVVNUT01FUiIsIlJFQUQ6UEFZTUVOVCIsIldSSVRFOkZJTkFOQ0UiLCJSRUFEOlVTRVJJTkZPIiwiV1JJVEU6UFVSQ0hBU0UiLCJXUklURTpDVVNUT01FUiIsIldSSVRFOk9OTElORVBBWU1FTlQiLCJSRUFEOkZJTkFOQ0UiLCJBTEw6SU5URVJOQUwiLCJXUklURTpQUk9EVUNUIiwiV1JJVEU6VVNFUklORk8iLCJXUklURTpSRUZVTkQiXSwicmVuZXdlZCI6ZmFsc2UsInVzZXIiOnsidXNlclR5cGUiOiJVU0VSIiwidXVpZCI6IjQyNDM2M2RlLTM2YzAtMTFlYS1iM2RiLWIzMDA3Y2M0NzRlMyIsIm9yZ1V1aWQiOiI0MjQxYjNmNC0zNmMwLTExZWEtODlmMS0wNGZkYWI3YWQyOGYiLCJ1c2VyUm9sZSI6Ik9XTkVSIn19.NgGM_8fqV-LzPdLNNhtB4uBDGzz-_W5UBkm9Rc83Sq6XRLTUx0fJTeCXcyjFxYiphIe3-5e7K43ur0kHUIQbrXDpvJZsuD-pJuP5M_2ZxwMaPIxLwBbRoCeNKiMRytLLUX58YRdBz2QLXsJnK78YQsDHfNdU2_K-a9esHt988XPYHq4uYnjpcqE8Dh_joawSwof3JwuAH9LTliHdPGcNjFBhBRfbf3rziY3FRhewfamocX1IPseynOQGEMhOlwkvfTReQs-mS-Ro8WndUF1C4X7R9X3esa7exMXiW5y__48Z1EpWpJL_zDvDEI-l19N6EHzwSM7k_gj-yM2QSDk97w",
+        }
+      }
+  
+    $.ajax(settings).done((response)=>{
+      console.log(response.linkUrls[0]);
+      console.log((response.purchases).length);
+      let arr = new Array(3);
+      let name = '';
+  
+      let body = document.getElementById("table-body");
+      let btn_class = ["buttons","btn","btn-primary"];
+      let btn_class2 = ["buttons","btn","btn-primary","bg"];
+  
+      
+      for (let x = 0; x < (response.purchases).length; x++) 
+      {
+        name = '';
+  
+        let a = document.createElement("tr");
+        a.setAttribute("id",response.purchases[x].purchaseUUID);
+        body.appendChild(a);
+  
+        let btn = document.createElement("button");
+        btn.classList.add(...btn_class)
+        let btn_data = document.createTextNode("Complete");
+        btn.appendChild(btn_data);
+        btn.onclick = function(){
+          document.getElementById(a.getAttribute("id")).remove();
+        }
+        let btn2 = document.createElement("button");
+        btn2.classList.add(...btn_class2)
+        let btn_data2 = document.createTextNode("Delete");
+        btn2.appendChild(btn_data2);
+        btn2.onclick = function()
+        {
+          document.getElementById(a.getAttribute("id")).remove();
+        }
+  
+        for (let index = 0; index < (response.purchases[x].products).length; index++) 
+          {
+            name += (response.purchases[x].products[index].name).toString() + '\r\n';
+            //console.log((response.purchases[x].products).length);
+  
+          }
+  
+        // array should have 3 elements
+        arr.push(name);
+        arr.push(response.purchases[x].created.substring(11,19));
+        arr.push(((response.purchases[x].purchaseNumber)%99+1).toString());
+        //console.log(name);
+  
+  
+        for (let index = 0; index <3; index++) 
+        {
+          let y = document.createElement("td");
+          let c = document.createTextNode(arr.pop());
+          y.appendChild(c);
+          a.appendChild(y);
+        }
+        
+  
+        y = document.createElement("td");
+        y.appendChild(btn);
+        y.appendChild(btn2);
+  
+        a.appendChild(y);
+      }
+    });
+    </script>
+
+<script type="text/javascript">
+  window.onbeforeunload = function() {
+      return "Please do not reload the page. Thanks";
+  }
+</script>
+
+<script>
+
+  function getNextPurchases(url){
+    //use link from linkUrls to get following data 
+    let settings = {
+      "async": true,
+        "crossDomain": true,
+        "url": url,
+        "method": "GET",
+        "headers": {
+            "Authorization": "Bearer eyJraWQiOiIxNTgyNjE3NDA4NjEwIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJpWmV0dGxlIiwiaWF0IjoxNTgyNjc3ODc1LCJhdWQiOiJBUEkiLCJleHAiOjE1ODI2ODUwNzUsInN1YiI6IjQyNDM2M2RlLTM2YzAtMTFlYS1iM2RiLWIzMDA3Y2M0NzRlMyIsImNsaWVudF9pZCI6IjYyMDM2MWNlLTgzM2MtNGUwMy1iN2MwLWQ5MDJmOTFkODI0YiIsInNjb3BlIjpbIlJFQUQ6T05MSU5FUEFZTUVOVCIsIldSSVRFOlBBWU1FTlQiLCJSRUFEOlBST0RVQ1QiLCJSRUFEOlBVUkNIQVNFIiwiUkVBRDpDVVNUT01FUiIsIlJFQUQ6UEFZTUVOVCIsIldSSVRFOkZJTkFOQ0UiLCJSRUFEOlVTRVJJTkZPIiwiV1JJVEU6UFVSQ0hBU0UiLCJXUklURTpDVVNUT01FUiIsIldSSVRFOk9OTElORVBBWU1FTlQiLCJSRUFEOkZJTkFOQ0UiLCJBTEw6SU5URVJOQUwiLCJXUklURTpQUk9EVUNUIiwiV1JJVEU6VVNFUklORk8iLCJXUklURTpSRUZVTkQiXSwicmVuZXdlZCI6ZmFsc2UsInVzZXIiOnsidXNlclR5cGUiOiJVU0VSIiwidXVpZCI6IjQyNDM2M2RlLTM2YzAtMTFlYS1iM2RiLWIzMDA3Y2M0NzRlMyIsIm9yZ1V1aWQiOiI0MjQxYjNmNC0zNmMwLTExZWEtODlmMS0wNGZkYWI3YWQyOGYiLCJ1c2VyUm9sZSI6Ik9XTkVSIn19.NgGM_8fqV-LzPdLNNhtB4uBDGzz-_W5UBkm9Rc83Sq6XRLTUx0fJTeCXcyjFxYiphIe3-5e7K43ur0kHUIQbrXDpvJZsuD-pJuP5M_2ZxwMaPIxLwBbRoCeNKiMRytLLUX58YRdBz2QLXsJnK78YQsDHfNdU2_K-a9esHt988XPYHq4uYnjpcqE8Dh_joawSwof3JwuAH9LTliHdPGcNjFBhBRfbf3rziY3FRhewfamocX1IPseynOQGEMhOlwkvfTReQs-mS-Ro8WndUF1C4X7R9X3esa7exMXiW5y__48Z1EpWpJL_zDvDEI-l19N6EHzwSM7k_gj-yM2QSDk97w",
+        }
+    }
+    $.ajax(settings).done((response)=>{return response;});
+  }
+</script>
+    
+   
+  <!--
+  "clientId": "620361ce-833c-4e03-b7c0-d902f91d824b",
+   *  "clientSecret": "IZSEC22e91ce5-0fda-4edd-87f0-be705553e6a4"
+   */
+  -->
+
+  </div>
+
+  
+</body>
+</html>
